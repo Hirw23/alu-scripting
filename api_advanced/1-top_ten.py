@@ -1,23 +1,24 @@
 #!/usr/bin/python3
-"""
-Contains the top_ten function
-"""
-
+"""Script that fetch 10 hot post for a given subreddit."""
 import requests
 
 
 def top_ten(subreddit):
-    """prints the titles of the top ten hot posts for a given subreddit"""
-    if subreddit is None or type(subreddit) is not str:
-        print(None)
-    r = requests.get('http://www.reddit.com/r/{}/hot.json'.format(subreddit),
-                     headers={'User-Agent': 'Python/requests:APIproject:\
-                     v1.0.0 (by /u/aaorrico23)'},
-                     params={'limit': 10}).json()
-    posts = r.get('data', {}).get('children', None)
-    if posts is None or (len(posts) > 0 and posts[0].get('kind') != 't3'):
-        print(None)
-    else:
-        for post in posts:
-            print(post.get('data', {}).get('title', None))
+    """Return number of subscribers if @subreddit is valid subreddit.
+    if not return 0."""
 
+    headers = {'User-Agent': 'MyAPI/0.0.1'}
+    subreddit_url = "https://reddit.com/r/{}.json".format(subreddit)
+    response = requests.get(subreddit_url, headers=headers)
+
+    if response.status_code == 200:
+        json_data = response.json()
+        for i in range(10):
+            print(
+                json_data.get('data')
+                .get('children')[i]
+                .get('data')
+                .get('title')
+            )
+    else:
+        print(None)
